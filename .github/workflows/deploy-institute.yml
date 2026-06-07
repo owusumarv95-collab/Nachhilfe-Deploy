@@ -60,29 +60,20 @@ jobs:
         run: |
           REPO_NAME="demo-${INSTITUTE_ID}"
           
-          # Check if repo already exists
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          echo "Attempting to create repo: $REPO_NAME"
+          RESPONSE=$(curl -s -X POST \
             -H "Authorization: token $GH_TOKEN" \
-            "https://api.github.com/repos/$ORG/$REPO_NAME")
-          
-          if [ "$STATUS" = "404" ]; then
-            echo "Creating new repo: $REPO_NAME"
-            curl -X POST \
-              -H "Authorization: token $GH_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$ORG/$TEMPLATE_REPO/generate" \
-              -d "{
-                \"owner\": \"$ORG\",
-                \"name\": \"$REPO_NAME\",
-                \"description\": \"Demo Portal fuer $INSTITUTE_BRAND\",
-                \"private\": false
-              }"
-            echo "Waiting for repo to be ready..."
-            sleep 5
-          else
-            echo "Repo already exists: $REPO_NAME"
-          fi
-          
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$ORG/$TEMPLATE_REPO/generate" \
+            -d "{
+              \"owner\": \"$ORG\",
+              \"name\": \"$REPO_NAME\",
+              \"description\": \"Demo Portal fuer $INSTITUTE_BRAND\",
+              \"private\": false
+            }")
+          echo "Response: $RESPONSE"
+          echo "Waiting for repo to be ready..."
+          sleep 8
           echo "repo_name=$REPO_NAME" >> $GITHUB_ENV
 
       - name: Push App.jsx to institute repo
