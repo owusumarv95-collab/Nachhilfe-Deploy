@@ -1,0 +1,10 @@
+{
+  "name": "nachhilfe-deploy-workflow",
+  "version": "1.0.0",
+  "description": "Automatisches Deployment-System fuer Nachhilfe-Institut Demos",
+  "scripts": {
+    "generate": "node scripts/generate-app.js",
+    "new-institute": "node scripts/new-institute.js"
+  },
+  "dependencies": {}
+}
